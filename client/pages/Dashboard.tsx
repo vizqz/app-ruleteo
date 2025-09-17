@@ -41,6 +41,11 @@ export default function Dashboard() {
     return `${digits.slice(0, 4)} •••• •••• ${digits.slice(-4)}`;
   }
 
+  const currentCardId = cards[index]?.id;
+  const filteredRequests = currentCardId
+    ? requests.filter((r) => r.originId === currentCardId || r.destinationId === currentCardId)
+    : [];
+
   return (
     <div className="space-y-6">
       {/* Mobile-focused design */}
@@ -62,8 +67,9 @@ export default function Dashboard() {
           <CarouselContent>
             {cards.map((c) => (
               <CarouselItem key={c.id}>
-                <div className="rounded-2xl overflow-hidden shadow-card border border-white/20 bg-white/10 backdrop-blur-md text-white">
-                  <div className="p-5">
+                <div className="relative rounded-2xl overflow-hidden shadow-card border border-white/10 bg-gradient-to-br from-[#0b1b3a] via-[#0d3fa8] to-[#0b77e3] text-white">
+                  <div className="absolute inset-0 opacity-20 bg-[radial-gradient(120%_80%_at_80%_0%,rgba(255,255,255,0.6),transparent)]" />
+                  <div className="relative p-5">
                     <div className="text-xs uppercase tracking-wider text-white/70">Tarjeta</div>
                     <div className="mt-2 text-lg font-medium">{c.bank} • {c.name}</div>
                     <div className="mt-6 flex items-end justify-between">
@@ -77,7 +83,7 @@ export default function Dashboard() {
                       </div>
                     </div>
                   </div>
-                  <div className="bg-background/50 text-foreground grid grid-cols-4 gap-2 p-3">
+                  <div className="bg-white/10 text-white/90 grid grid-cols-4 gap-2 p-3 border-t border-white/10 backdrop-blur">
                     <Action icon={Phone} label="Contacto" />
                     <Action icon={Lock} label="Congelar" />
                     <Action icon={Gauge} label="Límite" />
@@ -91,33 +97,19 @@ export default function Dashboard() {
           <CarouselNext className="right-2 top-1/2 -translate-y-1/2 bg-white/20 text-white border-white/20 hover:bg-white/30" />
         </Carousel>
 
-        <div className="mt-5 rounded-xl bg-card border border-border/60 p-4">
-          <div className="flex items-center justify-between">
-            <h2 className="font-heading text-base">Cuentas vinculadas</h2>
-          </div>
-          <div className="mt-2 divide-y divide-border/60">
-            {cards.map((c) => (
-              <div key={c.id} className="flex items-center justify-between py-3">
-                <div>
-                  <div className="text-sm font-medium">{c.bank} {c.name}</div>
-                </div>
-                <div className="text-sm font-mono">{formatCurrency(c.used)}</div>
-              </div>
-            ))}
-          </div>
-        </div>
 
         <div className="mt-5 rounded-xl bg-card border border-border/60 p-4">
           <div className="flex items-center justify-between">
-            <h2 className="font-heading text-base">Últimos movimientos</h2>
+            <h2 className="font-heading text-base">Movimientos</h2>
           </div>
           <div className="mt-2 space-y-3">
-            {requests.length === 0 && (
-              <p className="text-sm text-muted-foreground">Aún no hay movimientos.</p>
+            {filteredRequests.length === 0 && (
+              <p className="text-sm text-muted-foreground">Sin movimientos para esta tarjeta.</p>
             )}
-            {requests.slice(0, 5).map((r) => {
+            {filteredRequests.slice(0, 5).map((r) => {
               const o = cards.find((c) => c.id === r.originId)!;
               const d = cards.find((c) => c.id === r.destinationId)!;
+              const isOutgoing = r.originId === currentCardId;
               return (
                 <div key={r.id} className="flex items-center justify-between">
                   <div className="text-sm">
@@ -125,7 +117,7 @@ export default function Dashboard() {
                     <span className="text-muted-foreground"> → </span>
                     <span className="font-medium">{d.bank} {d.name}</span>
                   </div>
-                  <div className="text-sm font-mono">{formatCurrency(r.amount)}</div>
+                  <div className={cn("text-sm font-mono", isOutgoing ? "text-destructive" : "text-accent")}>{isOutgoing ? "-" : "+"}{formatCurrency(r.amount)}</div>
                 </div>
               );
             })}
