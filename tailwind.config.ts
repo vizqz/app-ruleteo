@@ -59,8 +59,8 @@ export default {
         },
       },
       fontFamily: {
-        sans: ["Montserrat", "Inter", "ui-sans-serif", "system-ui", "sans-serif"],
-        heading: ["Oswald", "Playfair Display", "Montserrat", "ui-sans-serif", "system-ui", "sans-serif"],
+        sans: ["Inter", "Montserrat", "ui-sans-serif", "system-ui", "sans-serif"],
+        heading: ["Inter", "Montserrat", "ui-sans-serif", "system-ui", "sans-serif"],
         serif: ["Playfair Display", "Georgia", "ui-serif", "serif"],
         mono: ["Roboto Mono", "ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
       },
