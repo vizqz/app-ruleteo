@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
-import { useAppStore, formatCurrency, getBestTransactionDate } from "@/store/appStore";
+import {
+  useAppStore,
+  formatCurrency,
+  getBestTransactionDate,
+} from "@/store/appStore";
 import type { Card, Bank } from "@/store/types";
 import CardTile from "@/components/dashboard/CardTile";
 import { Lock, Phone, Gauge, Settings, Plus } from "lucide-react";
@@ -43,7 +47,10 @@ export default function Dashboard() {
 
   const currentCardId = cards[index]?.id;
   const filteredRequests = currentCardId
-    ? requests.filter((r) => r.originId === currentCardId || r.destinationId === currentCardId)
+    ? requests.filter(
+        (r) =>
+          r.originId === currentCardId || r.destinationId === currentCardId,
+      )
     : [];
 
   return (
@@ -53,7 +60,9 @@ export default function Dashboard() {
         <div className="mb-3 text-white">
           <div className="text-xs/4 text-white/70">Saldo</div>
           <div className="text-4xl font-semibold tracking-tight">
-            {primary ? formatCurrency(Math.max(0, primary.creditLimit - primary.used)) : ""}
+            {primary
+              ? formatCurrency(Math.max(0, primary.creditLimit - primary.used))
+              : ""}
           </div>
           {primary && (
             <div className="mt-1 text-[11px] text-white/60">
@@ -61,7 +70,12 @@ export default function Dashboard() {
                 const best = getBestTransactionDate(primary.cutoffDay);
                 const cutoff = new Date(best);
                 cutoff.setDate(cutoff.getDate() - 1);
-                const days = Math.max(0, Math.ceil((cutoff.getTime() - Date.now()) / (1000 * 60 * 60 * 24)));
+                const days = Math.max(
+                  0,
+                  Math.ceil(
+                    (cutoff.getTime() - Date.now()) / (1000 * 60 * 60 * 24),
+                  ),
+                );
                 return `${days} días para corte`;
               })()}
             </div>
@@ -78,27 +92,39 @@ export default function Dashboard() {
           />
         </div>
 
-        <Carousel setApi={setApi} opts={{ loop: true, align: "start" }} className="relative">
+        <Carousel
+          setApi={setApi}
+          opts={{ loop: true, align: "start" }}
+          className="relative"
+        >
           <CarouselContent>
             {cards.map((c) => (
               <CarouselItem key={c.id}>
                 <div className="relative rounded-2xl overflow-hidden shadow-none bg-gradient-to-br from-[#0b1b3a] via-[#0d3fa8] to-[#0b77e3] text-white">
                   <div className="absolute inset-0 opacity-15 bg-[radial-gradient(120%_80%_at_80%_0%,rgba(255,255,255,0.6),transparent)]" />
                   <div className="relative p-5">
-                    <div className="text-xs uppercase tracking-wider text-white/70">Tarjeta</div>
-                    <div className="mt-2 text-lg font-medium">{c.bank} • {c.name}</div>
+                    <div className="text-xs uppercase tracking-wider text-white/70">
+                      Tarjeta
+                    </div>
+                    <div className="mt-2 text-lg font-medium">
+                      {c.bank} • {c.name}
+                    </div>
                     <div className="mt-6 flex items-end justify-between">
                       <div>
                         <div className="text-sm text-white/60">Número</div>
-                        <div className="font-mono tracking-widest text-lg">{maskedNumber(c.id)}</div>
+                        <div className="font-mono tracking-widest text-lg">
+                          {maskedNumber(c.id)}
+                        </div>
                       </div>
                       <div className="text-right">
                         <div className="text-sm text-white/60">Límite</div>
-                        <div className="font-mono">{formatCurrency(c.creditLimit)}</div>
+                        <div className="font-mono">
+                          {formatCurrency(c.creditLimit)}
+                        </div>
                       </div>
                     </div>
                   </div>
-                                  </div>
+                </div>
               </CarouselItem>
             ))}
           </CarouselContent>
@@ -106,25 +132,41 @@ export default function Dashboard() {
           <CarouselNext className="right-2 top-1/2 -translate-y-1/2 bg-white/20 text-white border-white/20 hover:bg-white/30" />
         </Carousel>
 
-
         <div className="mt-6">
           <h2 className="text-white/80 text-sm mb-2">Movimientos</h2>
           <div className="divide-y divide-white/10">
             {filteredRequests.length === 0 && (
-              <p className="text-xs text-white/60 py-3">Sin movimientos para esta tarjeta.</p>
+              <p className="text-xs text-white/60 py-3">
+                Sin movimientos para esta tarjeta.
+              </p>
             )}
             {filteredRequests.slice(0, 8).map((r) => {
               const o = cards.find((c) => c.id === r.originId)!;
               const d = cards.find((c) => c.id === r.destinationId)!;
               const isOutgoing = r.originId === currentCardId;
               return (
-                <div key={r.id} className="flex items-center justify-between py-3">
+                <div
+                  key={r.id}
+                  className="flex items-center justify-between py-3"
+                >
                   <div className="text-sm text-white/90">
-                    <span className="font-medium">{o.bank} {o.name}</span>
+                    <span className="font-medium">
+                      {o.bank} {o.name}
+                    </span>
                     <span className="text-white/50"> → </span>
-                    <span className="font-medium">{d.bank} {d.name}</span>
+                    <span className="font-medium">
+                      {d.bank} {d.name}
+                    </span>
                   </div>
-                  <div className={cn("text-sm font-mono", isOutgoing ? "text-rose-300" : "text-emerald-300")}>{isOutgoing ? "-" : "+"}{formatCurrency(r.amount)}</div>
+                  <div
+                    className={cn(
+                      "text-sm font-mono",
+                      isOutgoing ? "text-rose-300" : "text-emerald-300",
+                    )}
+                  >
+                    {isOutgoing ? "-" : "+"}
+                    {formatCurrency(r.amount)}
+                  </div>
                 </div>
               );
             })}
@@ -135,7 +177,9 @@ export default function Dashboard() {
       {/* Desktop view (keeps previous grid) */}
       <section className="hidden md:block">
         <div className="flex items-baseline justify-between gap-4">
-          <h1 className="font-heading text-2xl md:text-3xl">Bienvenido, Caleb</h1>
+          <h1 className="font-heading text-2xl md:text-3xl">
+            Bienvenido, Caleb
+          </h1>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6 mt-4">
           {cards.map((c) => (
@@ -147,9 +191,18 @@ export default function Dashboard() {
   );
 }
 
-function ActionIcon({ icon: Icon, label }: { icon: React.ComponentType<{ className?: string }>; label: string }) {
+function ActionIcon({
+  icon: Icon,
+  label,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+}) {
   return (
-    <button aria-label={label} className="h-10 w-10 grid place-items-center rounded-full border border-white/15 bg-white/10 text-white">
+    <button
+      aria-label={label}
+      className="h-10 w-10 grid place-items-center rounded-full border border-white/15 bg-white/10 text-white"
+    >
       <Icon className="h-5 w-5" />
     </button>
   );
@@ -193,19 +246,104 @@ function AddCard({ onAdd }: { onAdd: (card: Omit<Card, "id">) => void }) {
           <Plus className="h-4 w-4" />
         </button>
       ) : (
-        <form onSubmit={submit} className="rounded-lg border border-white/10 bg-black/40 backdrop-blur p-3 space-y-2 text-white">
+        <form
+          onSubmit={submit}
+          className="rounded-lg border border-white/10 bg-black/40 backdrop-blur p-3 space-y-2 text-white"
+        >
           <div className="grid grid-cols-2 gap-2">
-            <input required aria-label="Banco" placeholder="Banco" className="col-span-2 rounded-md border border-border px-2 py-1" value={form.bank} onChange={(e) => setForm({ ...form, bank: e.target.value as Bank })} />
-            <input required aria-label="Nombre" placeholder="Nombre" className="col-span-2 rounded-md border border-border px-2 py-1" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
-            <input type="number" min={0} required aria-label="Límite" placeholder="Límite" className="rounded-md border border-border px-2 py-1" value={form.creditLimit} onChange={(e) => setForm({ ...form, creditLimit: +e.target.value })} />
-            <input type="number" min={0} required aria-label="Usado" placeholder="Usado" className="rounded-md border border-border px-2 py-1" value={form.used} onChange={(e) => setForm({ ...form, used: +e.target.value })} />
-            <input type="number" min={1} max={28} required aria-label="Corte" placeholder="Corte" className="rounded-md border border-border px-2 py-1" value={form.cutoffDay} onChange={(e) => setForm({ ...form, cutoffDay: +e.target.value })} />
-            <input type="number" min={1} max={28} required aria-label="Facturación" placeholder="Facturación" className="rounded-md border border-border px-2 py-1" value={form.billingDay} onChange={(e) => setForm({ ...form, billingDay: +e.target.value })} />
-            <input type="number" step="0.001" min={0} max={1} required aria-label="Comisión" placeholder="Comisión (0-1)" className="col-span-2 rounded-md border border-border px-2 py-1" value={form.commissionRate} onChange={(e) => setForm({ ...form, commissionRate: +e.target.value })} />
+            <input
+              required
+              aria-label="Banco"
+              placeholder="Banco"
+              className="col-span-2 rounded-md border border-border px-2 py-1"
+              value={form.bank}
+              onChange={(e) =>
+                setForm({ ...form, bank: e.target.value as Bank })
+              }
+            />
+            <input
+              required
+              aria-label="Nombre"
+              placeholder="Nombre"
+              className="col-span-2 rounded-md border border-border px-2 py-1"
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+            />
+            <input
+              type="number"
+              min={0}
+              required
+              aria-label="Límite"
+              placeholder="Límite"
+              className="rounded-md border border-border px-2 py-1"
+              value={form.creditLimit}
+              onChange={(e) =>
+                setForm({ ...form, creditLimit: +e.target.value })
+              }
+            />
+            <input
+              type="number"
+              min={0}
+              required
+              aria-label="Usado"
+              placeholder="Usado"
+              className="rounded-md border border-border px-2 py-1"
+              value={form.used}
+              onChange={(e) => setForm({ ...form, used: +e.target.value })}
+            />
+            <input
+              type="number"
+              min={1}
+              max={28}
+              required
+              aria-label="Corte"
+              placeholder="Corte"
+              className="rounded-md border border-border px-2 py-1"
+              value={form.cutoffDay}
+              onChange={(e) => setForm({ ...form, cutoffDay: +e.target.value })}
+            />
+            <input
+              type="number"
+              min={1}
+              max={28}
+              required
+              aria-label="Facturación"
+              placeholder="Facturación"
+              className="rounded-md border border-border px-2 py-1"
+              value={form.billingDay}
+              onChange={(e) =>
+                setForm({ ...form, billingDay: +e.target.value })
+              }
+            />
+            <input
+              type="number"
+              step="0.001"
+              min={0}
+              max={1}
+              required
+              aria-label="Comisión"
+              placeholder="Comisión (0-1)"
+              className="col-span-2 rounded-md border border-border px-2 py-1"
+              value={form.commissionRate}
+              onChange={(e) =>
+                setForm({ ...form, commissionRate: +e.target.value })
+              }
+            />
           </div>
           <div className="flex items-center justify-end gap-2">
-            <button type="button" onClick={() => setOpen(false)} className="px-2 py-1 text-sm text-white/70">Cancelar</button>
-            <button type="submit" className="px-3 py-1.5 text-sm rounded-md bg-white text-black">Guardar</button>
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              className="px-2 py-1 text-sm text-white/70"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              className="px-3 py-1.5 text-sm rounded-md bg-white text-black"
+            >
+              Guardar
+            </button>
           </div>
         </form>
       )}

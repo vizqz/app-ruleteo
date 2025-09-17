@@ -3,7 +3,15 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { Bell, Home, Calculator, List, Wallet, User2 } from "lucide-react";
 
-function TabItem({ to, label, icon: Icon }: { to: string; label: string; icon: React.ComponentType<{ className?: string }> }) {
+function TabItem({
+  to,
+  label,
+  icon: Icon,
+}: {
+  to: string;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+}) {
   return (
     <NavLink
       to={to}
@@ -20,7 +28,15 @@ function TabItem({ to, label, icon: Icon }: { to: string; label: string; icon: R
   );
 }
 
-function NavItem({ to, label, onClick }: { to: string; label: string; onClick?: () => void }) {
+function NavItem({
+  to,
+  label,
+  onClick,
+}: {
+  to: string;
+  label: string;
+  onClick?: () => void;
+}) {
   return (
     <NavLink
       to={to}
@@ -28,7 +44,9 @@ function NavItem({ to, label, onClick }: { to: string; label: string; onClick?: 
       className={({ isActive }) =>
         cn(
           "px-3 py-2 rounded-md text-sm font-medium transition-colors",
-          isActive ? "bg-muted text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted",
+          isActive
+            ? "bg-muted text-foreground"
+            : "text-muted-foreground hover:text-foreground hover:bg-muted",
         )
       }
     >
@@ -45,7 +63,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       {/* Mobile header */}
       <header className="md:hidden sticky top-0 z-40 border-b border-white/10 bg-white/10 backdrop-blur-md text-white">
         <div className="mx-auto max-w-md px-4 flex items-center justify-between h-12">
-          <button aria-label="notificaciones" className="p-1 rounded-md text-white/80 hover:text-white">
+          <button
+            aria-label="notificaciones"
+            className="p-1 rounded-md text-white/80 hover:text-white"
+          >
             <Bell className="h-5 w-5" />
           </button>
           <div className="font-heading text-white text-lg">FUPS</div>
@@ -81,16 +102,34 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           <div className="border-t border-white/10 bg-white/10 backdrop-blur-md">
             <div className="container py-2 flex flex-wrap gap-2">
               <NavItem to="/" label="Panel" onClick={() => setOpen(false)} />
-              <NavItem to="/simulate" label="Simulador" onClick={() => setOpen(false)} />
-              <NavItem to="/requests" label="Solicitudes" onClick={() => setOpen(false)} />
-              <NavItem to="/expenses" label="Gastos" onClick={() => setOpen(false)} />
-              <NavItem to="/notifications" label="Notificaciones" onClick={() => setOpen(false)} />
+              <NavItem
+                to="/simulate"
+                label="Simulador"
+                onClick={() => setOpen(false)}
+              />
+              <NavItem
+                to="/requests"
+                label="Solicitudes"
+                onClick={() => setOpen(false)}
+              />
+              <NavItem
+                to="/expenses"
+                label="Gastos"
+                onClick={() => setOpen(false)}
+              />
+              <NavItem
+                to="/notifications"
+                label="Notificaciones"
+                onClick={() => setOpen(false)}
+              />
             </div>
           </div>
         )}
       </header>
 
-      <main className="mx-auto max-w-md px-4 pb-20 pt-4 sm:pt-6 md:max-w-5xl md:pb-8">{children}</main>
+      <main className="mx-auto max-w-md px-4 pb-20 pt-4 sm:pt-6 md:max-w-5xl md:pb-8">
+        {children}
+      </main>
 
       {/* Bottom tab bar for mobile */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 border-t border-white/15 bg-black/30 backdrop-blur-xl text-white">
