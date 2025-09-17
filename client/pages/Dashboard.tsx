@@ -1,6 +1,6 @@
 import { useAppStore, formatCurrency } from "@/store/appStore";
 import CardTile from "@/components/dashboard/CardTile";
-import { Lock, RssOff, Gauge, Settings } from "lucide-react";
+import { Lock, Phone, Gauge, Settings } from "lucide-react";
 
 export default function Dashboard() {
   const { state } = useAppStore();
