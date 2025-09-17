@@ -150,10 +150,10 @@ function Action({ icon: Icon, label }: { icon: React.ComponentType<{ className?:
   );
 }
 
-function AddCard({ onAdd }: { onAdd: (card: Parameters<typeof useAppStore>[0] extends never ? never : any) => void }) {
+function AddCard({ onAdd }: { onAdd: (card: Omit<Card, "id">) => void }) {
   const [open, setOpen] = useState(false);
-  const [form, setForm] = useState({
-    bank: "",
+  const [form, setForm] = useState<Omit<Card, "id">>({
+    bank: "Other" as Bank,
     name: "",
     creditLimit: 0,
     used: 0,
