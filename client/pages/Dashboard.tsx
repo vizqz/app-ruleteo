@@ -189,13 +189,13 @@ function AddCard({ onAdd }: { onAdd: (card: Omit<Card, "id">) => void }) {
       ) : (
         <form onSubmit={submit} className="rounded-lg border border-border/60 bg-background p-3 space-y-2">
           <div className="grid grid-cols-2 gap-2">
-            <input required placeholder="Banco" className="col-span-2 rounded-md border border-border px-2 py-1" value={form.bank} onChange={(e) => setForm({ ...form, bank: e.target.value })} />
-            <input required placeholder="Nombre" className="col-span-2 rounded-md border border-border px-2 py-1" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
-            <input type="number" min={0} required placeholder="Límite" className="rounded-md border border-border px-2 py-1" value={form.creditLimit} onChange={(e) => setForm({ ...form, creditLimit: +e.target.value })} />
-            <input type="number" min={0} required placeholder="Usado" className="rounded-md border border-border px-2 py-1" value={form.used} onChange={(e) => setForm({ ...form, used: +e.target.value })} />
-            <input type="number" min={1} max={28} required placeholder="Corte" className="rounded-md border border-border px-2 py-1" value={form.cutoffDay} onChange={(e) => setForm({ ...form, cutoffDay: +e.target.value })} />
-            <input type="number" min={1} max={28} required placeholder="Facturación" className="rounded-md border border-border px-2 py-1" value={form.billingDay} onChange={(e) => setForm({ ...form, billingDay: +e.target.value })} />
-            <input type="number" step="0.001" min={0} max={1} required placeholder="Comisión (0-1)" className="col-span-2 rounded-md border border-border px-2 py-1" value={form.commissionRate} onChange={(e) => setForm({ ...form, commissionRate: +e.target.value })} />
+            <input required aria-label="Banco" placeholder="Banco" className="col-span-2 rounded-md border border-border px-2 py-1" value={form.bank} onChange={(e) => setForm({ ...form, bank: e.target.value as Bank })} />
+            <input required aria-label="Nombre" placeholder="Nombre" className="col-span-2 rounded-md border border-border px-2 py-1" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+            <input type="number" min={0} required aria-label="Límite" placeholder="Límite" className="rounded-md border border-border px-2 py-1" value={form.creditLimit} onChange={(e) => setForm({ ...form, creditLimit: +e.target.value })} />
+            <input type="number" min={0} required aria-label="Usado" placeholder="Usado" className="rounded-md border border-border px-2 py-1" value={form.used} onChange={(e) => setForm({ ...form, used: +e.target.value })} />
+            <input type="number" min={1} max={28} required aria-label="Corte" placeholder="Corte" className="rounded-md border border-border px-2 py-1" value={form.cutoffDay} onChange={(e) => setForm({ ...form, cutoffDay: +e.target.value })} />
+            <input type="number" min={1} max={28} required aria-label="Facturación" placeholder="Facturación" className="rounded-md border border-border px-2 py-1" value={form.billingDay} onChange={(e) => setForm({ ...form, billingDay: +e.target.value })} />
+            <input type="number" step="0.001" min={0} max={1} required aria-label="Comisión" placeholder="Comisión (0-1)" className="col-span-2 rounded-md border border-border px-2 py-1" value={form.commissionRate} onChange={(e) => setForm({ ...form, commissionRate: +e.target.value })} />
           </div>
           <div className="flex items-center justify-end gap-2">
             <button type="button" onClick={() => setOpen(false)} className="px-2 py-1 text-sm text-muted-foreground">Cancelar</button>
