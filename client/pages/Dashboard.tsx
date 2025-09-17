@@ -30,7 +30,7 @@ export default function Dashboard() {
               </div>
             </div>
             <div className="bg-background text-foreground grid grid-cols-4 gap-2 p-3">
-              <Action icon={RssOff} label="Contacto" />
+              <Action icon={Phone} label="Contacto" />
               <Action icon={Lock} label="Congelar" />
               <Action icon={Gauge} label="Límite" />
               <Action icon={Settings} label="Ajustes" />
@@ -56,7 +56,7 @@ export default function Dashboard() {
 
         <div className="mt-5 rounded-xl bg-card border border-border/60 p-4">
           <div className="flex items-center justify-between">
-            <h2 className="font-heading text-base">Últimos movimientos</h2>
+            <h2 className="font-heading text-base">��ltimos movimientos</h2>
           </div>
           <div className="mt-2 space-y-3">
             {requests.length === 0 && (
