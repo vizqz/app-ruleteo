@@ -10,7 +10,7 @@ function TabItem({ to, label, icon: Icon }: { to: string; label: string; icon: R
       className={({ isActive }) =>
         cn(
           "flex flex-col items-center justify-center gap-0.5 px-3 py-2 text-xs",
-          isActive ? "text-primary" : "text-muted-foreground hover:text-foreground",
+          isActive ? "text-white" : "text-white/60 hover:text-white",
         )
       }
     >
@@ -93,7 +93,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <main className="mx-auto max-w-md px-4 pb-20 pt-4 sm:pt-6 md:max-w-5xl md:pb-8">{children}</main>
 
       {/* Bottom tab bar for mobile */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 border-t border-white/10 bg-white/10 backdrop-blur-md text-white">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 border-t border-white/15 bg-black/30 backdrop-blur-xl text-white">
         <div className="mx-auto max-w-md grid grid-cols-4">
           <TabItem to="/" label="Inicio" icon={Home} />
           <TabItem to="/simulate" label="Simular" icon={Calculator} />
