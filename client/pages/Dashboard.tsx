@@ -1,23 +1,33 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppStore, formatCurrency } from "@/store/appStore";
 import type { Card, Bank } from "@/store/types";
 import CardTile from "@/components/dashboard/CardTile";
-import { Lock, Phone, Gauge, Settings, ChevronLeft, ChevronRight, Plus } from "lucide-react";
+import { Lock, Phone, Gauge, Settings, Plus } from "lucide-react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+  type CarouselApi,
+} from "@/components/ui/carousel";
 
 export default function Dashboard() {
   const { state, actions } = useAppStore();
   const { cards, requests } = state;
   const [index, setIndex] = useState(0);
+  const [api, setApi] = useState<CarouselApi | null>(null);
   const primary = cards[index];
 
-  function prev() {
-    if (cards.length === 0) return;
-    setIndex((i) => (i - 1 + cards.length) % cards.length);
-  }
-  function next() {
-    if (cards.length === 0) return;
-    setIndex((i) => (i + 1) % cards.length);
-  }
+  useEffect(() => {
+    if (!api) return;
+    const onSelect = () => setIndex(api.selectedScrollSnap());
+    api.on("select", onSelect);
+    onSelect();
+    return () => {
+      api.off("select", onSelect);
+    };
+  }, [api]);
 
   function maskedNumber(id: string) {
     // Generate a deterministic 16-digit masked number from the UUID
@@ -37,52 +47,49 @@ export default function Dashboard() {
       <section className="md:hidden">
         <h1 className="font-heading text-xl mb-2">Bienvenido, Caleb</h1>
 
-        {/* Controls row: arrows + add card */}
-        <div className="mb-3 flex items-center justify-between">
-          <div className="inline-flex items-center gap-2">
-            <button onClick={prev} className="h-9 w-9 grid place-items-center rounded-full border border-border/60 bg-background">
-              <ChevronLeft className="h-5 w-5" />
-            </button>
-            <button onClick={next} className="h-9 w-9 grid place-items-center rounded-full border border-border/60 bg-background">
-              <ChevronRight className="h-5 w-5" />
-            </button>
-          </div>
-          <AddCard onAdd={(card) => {
-            actions.addCard(card);
-            setIndex(cards.length); // focus new card (now at the end)
-          }} />
+        {/* Controls row: add card */}
+        <div className="mb-3 flex items-center justify-end">
+          <AddCard
+            onAdd={(card) => {
+              actions.addCard(card);
+              // slide to the newly added card at the end
+              setTimeout(() => api?.scrollTo(cards.length), 0);
+            }}
+          />
         </div>
 
-        {primary && (
-          <div className="relative rounded-2xl overflow-hidden shadow-card border border-border/60 bg-gradient-to-br from-neutral-900 to-neutral-800 text-white">
-            <button onClick={prev} aria-label="Anterior" className="absolute left-2 top-1/2 -translate-y-1/2 h-8 w-8 grid place-items-center rounded-full bg-white/15 text-white">
-              <ChevronLeft className="h-4 w-4" />
-            </button>
-            <button onClick={next} aria-label="Siguiente" className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 grid place-items-center rounded-full bg-white/15 text-white">
-              <ChevronRight className="h-4 w-4" />
-            </button>
-            <div className="p-5">
-              <div className="text-xs uppercase tracking-wider text-white/70">HESAP KARTI</div>
-              <div className="mt-2 text-lg font-medium">{primary.bank} • {primary.name}</div>
-              <div className="mt-6 flex items-end justify-between">
-                <div>
-                  <div className="text-sm text-white/60">Número</div>
-                  <div className="font-mono tracking-widest text-lg">{maskedNumber(primary.id)}</div>
+        <Carousel setApi={setApi} opts={{ loop: true, align: "start" }} className="relative">
+          <CarouselContent>
+            {cards.map((c) => (
+              <CarouselItem key={c.id}>
+                <div className="rounded-2xl overflow-hidden shadow-card border border-white/20 bg-white/10 backdrop-blur-md text-white">
+                  <div className="p-5">
+                    <div className="text-xs uppercase tracking-wider text-white/70">Tarjeta</div>
+                    <div className="mt-2 text-lg font-medium">{c.bank} • {c.name}</div>
+                    <div className="mt-6 flex items-end justify-between">
+                      <div>
+                        <div className="text-sm text-white/60">Número</div>
+                        <div className="font-mono tracking-widest text-lg">{maskedNumber(c.id)}</div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-sm text-white/60">Límite</div>
+                        <div className="font-mono">{formatCurrency(c.creditLimit)}</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="bg-background/50 text-foreground grid grid-cols-4 gap-2 p-3">
+                    <Action icon={Phone} label="Contacto" />
+                    <Action icon={Lock} label="Congelar" />
+                    <Action icon={Gauge} label="Límite" />
+                    <Action icon={Settings} label="Ajustes" />
+                  </div>
                 </div>
-                <div className="text-right">
-                  <div className="text-sm text-white/60">Límite</div>
-                  <div className="font-mono">{formatCurrency(primary.creditLimit)}</div>
-                </div>
-              </div>
-            </div>
-            <div className="bg-background text-foreground grid grid-cols-4 gap-2 p-3">
-              <Action icon={Phone} label="Contacto" />
-              <Action icon={Lock} label="Congelar" />
-              <Action icon={Gauge} label="Límite" />
-              <Action icon={Settings} label="Ajustes" />
-            </div>
-          </div>
-        )}
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious className="left-2 top-1/2 -translate-y-1/2 bg-white/20 text-white border-white/20 hover:bg-white/30" />
+          <CarouselNext className="right-2 top-1/2 -translate-y-1/2 bg-white/20 text-white border-white/20 hover:bg-white/30" />
+        </Carousel>
 
         <div className="mt-5 rounded-xl bg-card border border-border/60 p-4">
           <div className="flex items-center justify-between">
