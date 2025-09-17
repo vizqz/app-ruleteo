@@ -82,8 +82,8 @@ export default function Dashboard() {
           <CarouselContent>
             {cards.map((c) => (
               <CarouselItem key={c.id}>
-                <div className="relative rounded-2xl overflow-hidden shadow-card border border-white/10 bg-gradient-to-br from-[#0b1b3a] via-[#0d3fa8] to-[#0b77e3] text-white">
-                  <div className="absolute inset-0 opacity-20 bg-[radial-gradient(120%_80%_at_80%_0%,rgba(255,255,255,0.6),transparent)]" />
+                <div className="relative rounded-2xl overflow-hidden shadow-none bg-gradient-to-br from-[#0b1b3a] via-[#0d3fa8] to-[#0b77e3] text-white">
+                  <div className="absolute inset-0 opacity-15 bg-[radial-gradient(120%_80%_at_80%_0%,rgba(255,255,255,0.6),transparent)]" />
                   <div className="relative p-5">
                     <div className="text-xs uppercase tracking-wider text-white/70">Tarjeta</div>
                     <div className="mt-2 text-lg font-medium">{c.bank} • {c.name}</div>
@@ -98,13 +98,7 @@ export default function Dashboard() {
                       </div>
                     </div>
                   </div>
-                  <div className="bg-white/10 text-white/90 grid grid-cols-4 gap-3 p-3 border-t border-white/10 backdrop-blur">
-                    <ActionIcon icon={Phone} label="Contacto" />
-                    <ActionIcon icon={Lock} label="Congelar" />
-                    <ActionIcon icon={Gauge} label="Límite" />
-                    <ActionIcon icon={Settings} label="Ajustes" />
-                  </div>
-                </div>
+                                  </div>
               </CarouselItem>
             ))}
           </CarouselContent>
@@ -113,26 +107,24 @@ export default function Dashboard() {
         </Carousel>
 
 
-        <div className="mt-5 rounded-xl bg-card border border-border/60 p-4">
-          <div className="flex items-center justify-between">
-            <h2 className="font-heading text-base">Movimientos</h2>
-          </div>
-          <div className="mt-2 space-y-3">
+        <div className="mt-6">
+          <h2 className="text-white/80 text-sm mb-2">Movimientos</h2>
+          <div className="divide-y divide-white/10">
             {filteredRequests.length === 0 && (
-              <p className="text-sm text-muted-foreground">Sin movimientos para esta tarjeta.</p>
+              <p className="text-xs text-white/60 py-3">Sin movimientos para esta tarjeta.</p>
             )}
-            {filteredRequests.slice(0, 5).map((r) => {
+            {filteredRequests.slice(0, 8).map((r) => {
               const o = cards.find((c) => c.id === r.originId)!;
               const d = cards.find((c) => c.id === r.destinationId)!;
               const isOutgoing = r.originId === currentCardId;
               return (
-                <div key={r.id} className="flex items-center justify-between">
-                  <div className="text-sm">
+                <div key={r.id} className="flex items-center justify-between py-3">
+                  <div className="text-sm text-white/90">
                     <span className="font-medium">{o.bank} {o.name}</span>
-                    <span className="text-muted-foreground"> → </span>
+                    <span className="text-white/50"> → </span>
                     <span className="font-medium">{d.bank} {d.name}</span>
                   </div>
-                  <div className={cn("text-sm font-mono", isOutgoing ? "text-destructive" : "text-accent")}>{isOutgoing ? "-" : "+"}{formatCurrency(r.amount)}</div>
+                  <div className={cn("text-sm font-mono", isOutgoing ? "text-rose-300" : "text-emerald-300")}>{isOutgoing ? "-" : "+"}{formatCurrency(r.amount)}</div>
                 </div>
               );
             })}
@@ -195,12 +187,13 @@ function AddCard({ onAdd }: { onAdd: (card: Omit<Card, "id">) => void }) {
       {!open ? (
         <button
           onClick={() => setOpen(true)}
-          className="inline-flex items-center gap-2 rounded-md bg-secondary text-secondary-foreground px-3 py-2 shadow-brand"
+          className="h-9 w-9 grid place-items-center rounded-full border border-white/15 bg-white/10 text-white"
+          aria-label="Agregar tarjeta"
         >
-          <Plus className="h-4 w-4" /> Agregar tarjeta
+          <Plus className="h-4 w-4" />
         </button>
       ) : (
-        <form onSubmit={submit} className="rounded-lg border border-border/60 bg-background p-3 space-y-2">
+        <form onSubmit={submit} className="rounded-lg border border-white/10 bg-black/40 backdrop-blur p-3 space-y-2 text-white">
           <div className="grid grid-cols-2 gap-2">
             <input required aria-label="Banco" placeholder="Banco" className="col-span-2 rounded-md border border-border px-2 py-1" value={form.bank} onChange={(e) => setForm({ ...form, bank: e.target.value as Bank })} />
             <input required aria-label="Nombre" placeholder="Nombre" className="col-span-2 rounded-md border border-border px-2 py-1" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
@@ -211,8 +204,8 @@ function AddCard({ onAdd }: { onAdd: (card: Omit<Card, "id">) => void }) {
             <input type="number" step="0.001" min={0} max={1} required aria-label="Comisión" placeholder="Comisión (0-1)" className="col-span-2 rounded-md border border-border px-2 py-1" value={form.commissionRate} onChange={(e) => setForm({ ...form, commissionRate: +e.target.value })} />
           </div>
           <div className="flex items-center justify-end gap-2">
-            <button type="button" onClick={() => setOpen(false)} className="px-2 py-1 text-sm text-muted-foreground">Cancelar</button>
-            <button type="submit" className="px-3 py-1.5 text-sm rounded-md bg-primary text-primary-foreground">Guardar</button>
+            <button type="button" onClick={() => setOpen(false)} className="px-2 py-1 text-sm text-white/70">Cancelar</button>
+            <button type="submit" className="px-3 py-1.5 text-sm rounded-md bg-white text-black">Guardar</button>
           </div>
         </form>
       )}
