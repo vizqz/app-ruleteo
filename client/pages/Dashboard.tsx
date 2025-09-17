@@ -50,14 +50,29 @@ export default function Dashboard() {
     <div className="space-y-6">
       {/* Mobile-focused design */}
       <section className="md:hidden">
-        <h1 className="font-heading text-xl mb-2">Bienvenido, Caleb</h1>
+        <div className="mb-3 text-white">
+          <div className="text-xs/4 text-white/70">Saldo</div>
+          <div className="text-4xl font-semibold tracking-tight">
+            {primary ? formatCurrency(Math.max(0, primary.creditLimit - primary.used)) : ""}
+          </div>
+          {primary && (
+            <div className="mt-1 text-[11px] text-white/60">
+              {(() => {
+                const best = getBestTransactionDate(primary.cutoffDay);
+                const cutoff = new Date(best);
+                cutoff.setDate(cutoff.getDate() - 1);
+                const days = Math.max(0, Math.ceil((cutoff.getTime() - Date.now()) / (1000 * 60 * 60 * 24)));
+                return `${days} días para corte`;
+              })()}
+            </div>
+          )}
+        </div>
 
-        {/* Controls row: add card */}
+        {/* Controls: add card */}
         <div className="mb-3 flex items-center justify-end">
           <AddCard
             onAdd={(card) => {
               actions.addCard(card);
-              // slide to the newly added card at the end
               setTimeout(() => api?.scrollTo(cards.length), 0);
             }}
           />
@@ -83,11 +98,11 @@ export default function Dashboard() {
                       </div>
                     </div>
                   </div>
-                  <div className="bg-white/10 text-white/90 grid grid-cols-4 gap-2 p-3 border-t border-white/10 backdrop-blur">
-                    <Action icon={Phone} label="Contacto" />
-                    <Action icon={Lock} label="Congelar" />
-                    <Action icon={Gauge} label="Límite" />
-                    <Action icon={Settings} label="Ajustes" />
+                  <div className="bg-white/10 text-white/90 grid grid-cols-4 gap-3 p-3 border-t border-white/10 backdrop-blur">
+                    <ActionIcon icon={Phone} label="Contacto" />
+                    <ActionIcon icon={Lock} label="Congelar" />
+                    <ActionIcon icon={Gauge} label="Límite" />
+                    <ActionIcon icon={Settings} label="Ajustes" />
                   </div>
                 </div>
               </CarouselItem>
@@ -140,11 +155,10 @@ export default function Dashboard() {
   );
 }
 
-function Action({ icon: Icon, label }: { icon: React.ComponentType<{ className?: string }>; label: string }) {
+function ActionIcon({ icon: Icon, label }: { icon: React.ComponentType<{ className?: string }>; label: string }) {
   return (
-    <button className="flex flex-col items-center justify-center gap-1 rounded-lg border border-border/60 bg-background px-2 py-2 text-xs">
+    <button aria-label={label} className="h-10 w-10 grid place-items-center rounded-full border border-white/15 bg-white/10 text-white">
       <Icon className="h-5 w-5" />
-      <span>{label}</span>
     </button>
   );
 }
