@@ -59,10 +59,28 @@ export default {
         },
       },
       fontFamily: {
-        sans: ["Montserrat", "Inter", "ui-sans-serif", "system-ui", "sans-serif"],
-        heading: ["Oswald", "Playfair Display", "Montserrat", "ui-sans-serif", "system-ui", "sans-serif"],
+        sans: [
+          "Inter",
+          "Montserrat",
+          "ui-sans-serif",
+          "system-ui",
+          "sans-serif",
+        ],
+        heading: [
+          "Inter",
+          "Montserrat",
+          "ui-sans-serif",
+          "system-ui",
+          "sans-serif",
+        ],
         serif: ["Playfair Display", "Georgia", "ui-serif", "serif"],
-        mono: ["Roboto Mono", "ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
+        mono: [
+          "Roboto Mono",
+          "ui-monospace",
+          "SFMono-Regular",
+          "Menlo",
+          "monospace",
+        ],
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -92,7 +110,8 @@ export default {
         "accordion-up": "accordion-up 0.2s ease-out",
       },
       boxShadow: {
-        brand: "0 10px 25px -5px rgba(21,101,192,0.4), 0 8px 10px -6px rgba(21,101,192,0.3)",
+        brand:
+          "0 10px 25px -5px rgba(21,101,192,0.4), 0 8px 10px -6px rgba(21,101,192,0.3)",
         card: "0 6px 16px rgba(0,0,0,0.25)",
       },
     },
